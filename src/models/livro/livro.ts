@@ -1,7 +1,8 @@
 import axios from "axios"
-import { Aluno } from "./Aluno"
+import { Aluno } from "../aluno/aluno"
+import { ILivro } from "./livro.interface"
 
-export class Livro {
+export class Livro implements ILivro {
     public id: string
     public titulo: string
     public autor: string
@@ -25,11 +26,11 @@ export class Livro {
         this.livros = response;
     }
 
-    async listarLivros(): Promise<Livro[]> {
+    async listar(): Promise<Livro[]> {
         return this.livros
     }
 
-    async reservarLivro(aluno: Aluno, tituloDoLivro: string) {
+    async reservar(aluno: Aluno, tituloDoLivro: string): Promise<void> {
         const alunoEstaAtivo = aluno.getStatus() == "Ativo"
 
         if (alunoEstaAtivo) {
@@ -40,7 +41,7 @@ export class Livro {
         }
     }
 
-    async cancelarReserva(tituloDoLivro: string) {
+    async cancelarReserva(tituloDoLivro: string): Promise<void> {
         const livro = this.livros.find(livro => livro.titulo == tituloDoLivro)
         livro.setStatus(null)
     }

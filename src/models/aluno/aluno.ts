@@ -1,4 +1,6 @@
-export class Aluno {
+import { IAluno } from "./aluno.interface"
+
+export class Aluno implements IAluno {
     public id: string
     public nome: string
     public curso: string

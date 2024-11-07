@@ -1,6 +1,7 @@
-import { Aluno } from "./Aluno";
+import { Aluno } from "../aluno/aluno";
+import { IDisciplina } from "./disciplina.interface";
 
-export class Disciplina {
+export class Disciplina implements IDisciplina {
     public id: string
     public nome: string
     public curso: string
@@ -9,7 +10,6 @@ export class Disciplina {
     private disciplinas: Disciplina[] = []
     private apiService: ApiService
 
-    
     constructor(data: Partial<Disciplina>) {
         Object.assign(this, data);
     }
@@ -23,7 +23,7 @@ export class Disciplina {
         return this.disciplinas
     }
 
-    async matriculaEmHistoria(aluno: Aluno) {
+    async matriculaEmHistoria(aluno: Aluno): Promise<void> {
         const alunoEstaAtivo = aluno.getStatus() == "Ativo"
 
         if (alunoEstaAtivo) {
