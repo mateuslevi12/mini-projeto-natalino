@@ -9,6 +9,10 @@ export class LivrosRepository implements ILivro {
     private livros: Livro[] = []
     public apiService: ApiService
 
+    constructor(apiService: ApiService) {
+        this.apiService = apiService;
+    }
+
     async inicializar(): Promise<void> {
         const response = await this.apiService.get<Livro[]>(this.baseUrl);
         if (Array.isArray(response)) {
@@ -22,20 +26,37 @@ export class LivrosRepository implements ILivro {
         return this.livros.map(livro => new Livro(livro))
     }
 
-    async reservar(aluno: Aluno, tituloDoLivro: string): Promise<void> {
-        const alunoEstaAtivo = aluno.getStatus() == "Ativo"
+    async buscarPorNome(tituloDoLivro: string) {
+        const livroEncontrado = this.livros.find(livro => livro.titulo === tituloDoLivro)
+        return new Livro(livroEncontrado)
+    }
 
+    async reservar(aluno: Aluno, tituloDoLivro: string): Promise<void> {
+        const alunoEstaAtivo = aluno.getStatus() === "Ativo";
+    
         if (alunoEstaAtivo) {
-            const livroEncontrado = this.livros.find(livro => livro.titulo === tituloDoLivro);
-            livroEncontrado.setStatus("Reservado")
+            const livroEncontrado = await this.buscarPorNome(tituloDoLivro);
+            if (livroEncontrado) {
+                console.log(livroEncontrado);
+    
+                livroEncontrado.setStatus("Reservado");
+    
+                console.log(livroEncontrado);
+            } else {
+                console.log("Livro não encontrado para reserva.");
+            }
         } else {
-            console.log("Não foi possivel reservar esse livro pois o aluno não esta ativo")
+            console.log("Não foi possível reservar esse livro pois o aluno não está ativo.");
         }
     }
 
     async cancelarReserva(tituloDoLivro: string): Promise<void> {
-        const livro = this.livros.find(livro => livro.titulo == tituloDoLivro)
-        livro.setStatus(null)
+        const livro = this.livros.find(livro => livro.titulo === tituloDoLivro);
+        if (livro) {
+            livro.setStatus(null);
+        } else {
+            console.log("Livro não encontrado para cancelamento de reserva.");
+        }
     }
 
     // async listarReservadosPeloALuno() {

@@ -9,6 +9,10 @@ export class DisciplinaRepository implements IDisciplina {
     private disciplinas: Disciplina[] = []
     private apiService: ApiService
 
+    constructor(apiService: ApiService) {
+        this.apiService = apiService;
+    }
+
     async inicializar(): Promise<void> {
         const response = await this.apiService.get<Disciplina[]>(this.baseUrl);
         this.disciplinas = response;

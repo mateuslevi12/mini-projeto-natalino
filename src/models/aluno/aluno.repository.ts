@@ -8,6 +8,10 @@ export class AlunoRepository implements IAluno {
     private alunos: Aluno[] = [];
     private apiService: ApiService
 
+    constructor(apiService: ApiService) {
+        this.apiService = apiService;
+    }
+
     async inicializar(): Promise<void> {
         const response = await this.apiService.get<Aluno[]>(this.baseUrl)
         this.alunos = response;
@@ -17,8 +21,8 @@ export class AlunoRepository implements IAluno {
         return this.alunos.map(aluno => new Aluno(aluno));
     }
 
-    async buscarPorId(id: string): Promise<Aluno | null> {
-        const aluno = this.alunos.find((aluno) => aluno.id === id);
+    async buscarPorId(id: number): Promise<Aluno | null> {
+        const aluno = this.alunos.find((aluno) => aluno.id == id);
         return new Aluno(aluno)
     }
 }

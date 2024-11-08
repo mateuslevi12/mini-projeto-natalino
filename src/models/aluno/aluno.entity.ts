@@ -1,5 +1,5 @@
 export class Aluno {
-    public id: string
+    public id: number
     public nome: string
     public curso: string
     public modalidade: string
@@ -20,6 +20,5 @@ export class Aluno {
     getStatus() {
         return this.status
     }
-
 
 }
