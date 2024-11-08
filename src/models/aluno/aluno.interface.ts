@@ -1,4 +1,4 @@
-import { Aluno } from "./aluno"
+import { Aluno } from "./aluno.entity"
 
 export interface IAluno {
     inicializar(): Promise<void>

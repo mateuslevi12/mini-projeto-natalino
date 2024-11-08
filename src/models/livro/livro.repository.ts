@@ -1,33 +1,25 @@
-import axios from "axios"
-import { Aluno } from "../aluno/aluno"
-import { ILivro } from "./livro.interface"
+import { ApiService } from '../../utils/apiService.interface';
+import { Aluno } from '../aluno/aluno.entity';
+import { Livro } from './livro.entity';
+import { ILivro } from './livro.interface';
 
-export class Livro implements ILivro {
-    public id: string
-    public titulo: string
-    public autor: string
-    public ano: number
-    public status: string
+export class LivrosRepository implements ILivro {
 
     private baseUrl: string = 'https://qiiw8bgxka.execute-api.us-east-2.amazonaws.com/acervo/biblioteca';
     private livros: Livro[] = []
-    private apiService: ApiService
-
-    constructor(data: Partial<Livro>) {
-        Object.assign(this, data);
-    }
-
-    setStatus(status: string | null) {
-        this.status = status;
-    }
+    public apiService: ApiService
 
     async inicializar(): Promise<void> {
-        const response = await this.apiService.get<Livro[]>(`${this.baseUrl}`);
-        this.livros = response;
+        const response = await this.apiService.get<Livro[]>(this.baseUrl);
+        if (Array.isArray(response)) {
+            this.livros = response;
+        } else {
+            console.error("Formato inesperado de resposta da API:", response);
+        }
     }
 
     async listar(): Promise<Livro[]> {
-        return this.livros
+        return this.livros.map(livro => new Livro(livro))
     }
 
     async reservar(aluno: Aluno, tituloDoLivro: string): Promise<void> {

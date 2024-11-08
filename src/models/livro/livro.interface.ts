@@ -1,5 +1,5 @@
-import { Aluno } from "../aluno/aluno"
-import { Livro } from "./livro"
+import { Aluno } from "../aluno/aluno.entity"
+import { Livro } from "./livro.entity"
 
 export interface ILivro {
     inicializar(): Promise<void>

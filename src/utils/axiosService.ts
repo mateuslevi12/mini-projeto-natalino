@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ApiService } from "./apiService.interface";
 
 export class AxiosService implements ApiService {
     async get<T>(url: string): Promise<T> {
