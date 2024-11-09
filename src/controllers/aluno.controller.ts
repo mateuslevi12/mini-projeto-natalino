@@ -1,5 +1,6 @@
 import { AxiosService } from '../utils/axiosService';
 import { AlunoRepository } from '../models/aluno/aluno.repository';
+import { Aluno } from '../models/aluno/aluno.entity';
 
 export class AlunoController {
     private alunoRepository: AlunoRepository;
@@ -27,10 +28,11 @@ export class AlunoController {
         }
     }
 
-    async buscarPorId(alunoId: number): Promise<void> {
+    async buscarPorId(alunoId: number): Promise<Aluno | null> {
         try {
             const aluno = await this.alunoRepository.buscarPorId(alunoId);
-            console.log(aluno)
+
+            return aluno
         } catch (error) {
             console.log({ message: 'Erro ao listar aluno.', error });
         }
