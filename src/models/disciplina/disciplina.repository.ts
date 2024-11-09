@@ -1,5 +1,6 @@
 import { ApiService } from '../../utils/apiService.interface';
 import { Aluno } from '../aluno/aluno.entity';
+import { AlunoRepository } from '../aluno/aluno.repository';
 import { Disciplina } from './disciplina.entity';
 import { IDisciplina } from './disciplina.interface';
 
@@ -27,6 +28,14 @@ export class DisciplinaRepository implements IDisciplina {
 
         if (alunoEstaAtivo) {
             aluno.setCurso("História")
+
+            const alunos = await new AlunoRepository(this.apiService).listar()
+            const index = alunos.findIndex(al => al.id === aluno.id)
+
+            if (index !== -1) {
+                alunos[index] = aluno
+            }
+            
         } else {
             console.log("Não foi possivel matricular esse aluno em História pois ele não esta ativo")
         }
