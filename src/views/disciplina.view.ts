@@ -23,7 +23,7 @@ export class DisciplinaView {
         await this.disciplinaController.buscarDisciplinasQueEstaMatriculado(parseInt(alunoId, 10));
     }
     
-    async cancelarReserva() {
+    async matriculaEmHistoria() {
         const alunoId = await this.readlineUtil.question("Informe o ID do aluno que deseja matricular em história: ");
         await this.disciplinaController.matriculaEmHistoria(parseInt(alunoId, 10));
     }

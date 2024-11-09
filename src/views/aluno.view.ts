@@ -14,8 +14,8 @@ export class AlunoView {
         await this.alunoController.inicializar();
     }
 
-    async listar() {
-        await this.alunoController.listar();
+    async listarAlunosDeHistoria() {
+        await this.alunoController.listarAlunosDeHistoria();
     }
 
     private async solicitarId(): Promise<number> {
@@ -43,6 +43,9 @@ export class AlunoView {
             }
 
             this.readlineUtil.close();
+            
+            return aluno
+
         } catch (error) {
             console.error("Erro ao buscar aluno por ID:", error);
             this.readlineUtil.close();

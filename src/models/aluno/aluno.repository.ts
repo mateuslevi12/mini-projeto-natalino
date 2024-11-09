@@ -3,7 +3,7 @@ import { Aluno } from "./aluno.entity";
 import { IAluno } from "./aluno.interface";
 
 export class AlunoRepository implements IAluno {
-    
+
     private baseUrl: string = 'https://rmi6vdpsq8.execute-api.us-east-2.amazonaws.com/msAluno';
     private alunos: Aluno[] = [];
     private apiService: ApiService
@@ -17,12 +17,20 @@ export class AlunoRepository implements IAluno {
         this.alunos = response;
     }
 
-    async listar(): Promise<Aluno[]> {
-        return this.alunos.map(aluno => new Aluno(aluno));
+    async listarAlunosDeHistoria(): Promise<Aluno[]> {
+        const lista =  this.alunos
+            .map(aluno => new Aluno(aluno))
+            .filter(aluno => aluno.getCurso() == "História")
+        return lista
     }
 
-    async buscarPorId(id: number): Promise<Aluno | null> {
-        const aluno = this.alunos.find((aluno) => aluno.getId() == id);
+    async listar(): Promise<Aluno[]> {
+        return this.alunos
+            .map(aluno => new Aluno(aluno))
+    }
+
+    async buscarPorId(id: number): Promise<Aluno> {
+        const aluno = this.alunos.find((aluno) => new Aluno(aluno).getId() == id);
         return new Aluno(aluno)
     }
 }

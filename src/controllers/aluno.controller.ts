@@ -19,9 +19,9 @@ export class AlunoController {
         }
     }
 
-    async listar(): Promise<void> {
+    async listarAlunosDeHistoria(): Promise<void> {
         try {
-            const alunos = await this.alunoRepository.listar();
+            const alunos = await this.alunoRepository.listarAlunosDeHistoria();
             console.log(alunos)
         } catch (error) {
             console.log({ message: 'Erro ao listar alunos.', error });
@@ -31,7 +31,6 @@ export class AlunoController {
     async buscarPorId(alunoId: number): Promise<Aluno | null> {
         try {
             const aluno = await this.alunoRepository.buscarPorId(alunoId);
-
             return aluno
         } catch (error) {
             console.log({ message: 'Erro ao listar aluno.', error });
