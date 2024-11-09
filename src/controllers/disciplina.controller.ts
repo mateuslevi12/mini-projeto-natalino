@@ -5,12 +5,11 @@ import { Disciplina } from '../models/disciplina/disciplina.entity';
 
 export class DisciplinaController {
     private disciplinaRepository: DisciplinaRepository;
-    private alunoService: AlunoRepository;
+    private alunosRepository: AlunoRepository;
 
-    constructor() {
-        const apiService = new AxiosService();
-        this.disciplinaRepository = new DisciplinaRepository(apiService);
-        this.alunoService = new AlunoRepository(apiService);
+    constructor(disciplinaRepository: DisciplinaRepository, alunosRepository: AlunoRepository) {
+        this.disciplinaRepository = disciplinaRepository
+        this.alunosRepository = alunosRepository
     }
 
     async inicializar(): Promise<void> {
@@ -33,7 +32,7 @@ export class DisciplinaController {
 
     async buscarDisciplinasQueEstaMatriculado(alunoId: number): Promise<Disciplina[] | []> {
         try {
-            const aluno = await this.alunoService.buscarPorId(alunoId);
+            const aluno = await this.alunosRepository.buscarPorId(alunoId);
             const disciplinas = await this.disciplinaRepository.buscarDisciplinasQueEstaMatriculado(aluno);
             console.log(disciplinas)
             return disciplinas
@@ -44,7 +43,7 @@ export class DisciplinaController {
 
     async matriculaEmHistoria(alunoId: number): Promise<void> {
         try {
-            const aluno = await this.alunoService.buscarPorId(alunoId);
+            const aluno = await this.alunosRepository.buscarPorId(alunoId);
             await this.disciplinaRepository.matriculaEmHistoria(aluno);
         } catch (error) {
             console.log({ message: 'Erro ao realizar matricula.', error });
@@ -53,7 +52,7 @@ export class DisciplinaController {
 
     async removerDisciplinaDaMatricula(alunoId: number, nomeDaMatricula: string): Promise<void> {
         try {
-            const aluno = await this.alunoService.buscarPorId(alunoId);
+            const aluno = await this.alunosRepository.buscarPorId(alunoId);
             await this.disciplinaRepository.removerDisciplinaDaMatricula(aluno, nomeDaMatricula);
         } catch (error) {
             console.log({ message: 'Erro ao remover disciplina.', error });

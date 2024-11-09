@@ -1,37 +1,37 @@
-import { LivroController } from "../controllers/livro.controller";
-import { ReadlineUtil } from "../utils/readline";
+    import { LivroController } from "../controllers/livro.controller";
+    import { ReadlineUtil } from "../utils/readline";
 
-export class LivroView {
-    private livroController: LivroController;
+    export class LivroView {
+        private livroController: LivroController;
     private readlineUtil: ReadlineUtil;
 
-    constructor() {
-        this.livroController = new LivroController();
-        this.readlineUtil = new ReadlineUtil();
+    constructor(livroController: LivroController, readlineUtil: ReadlineUtil) {
+        this.livroController = livroController; 
+        this.readlineUtil = readlineUtil;
     }
 
-    async initialize() {
-        await this.livroController.inicializar();
-    }
+        async inicializar() {
+            await this.livroController.inicializar();
+        }
 
-    async listar() {
-        await this.livroController.listar();
-    }
-    
-    async reservar() {
-        const alunoId = await this.readlineUtil.question("Informe o ID do aluno que irá reservar: ");
-        const tituloDoLivro = await this.readlineUtil.question("Informe o nome do livro que será reservado: ");
-        await this.livroController.reservar(parseInt(alunoId, 10), tituloDoLivro);
-    }
-    
-    async cancelarReserva() {
-        const tituloDoLivro = await this.readlineUtil.question("Informe o nome do livro que terá a reserva cancelada: ");
-        await this.livroController.cancelarReserva(tituloDoLivro);
-    }
+        async listar() {
+            await this.livroController.listar();
+        }
+        
+        async reservar() {
+            const alunoId = await this.readlineUtil.question("Informe o ID do aluno que irá reservar: ");
+            const tituloDoLivro = await this.readlineUtil.question("Informe o nome do livro que será reservado: ");
+            await this.livroController.reservar(parseInt(alunoId, 10), tituloDoLivro);
+        }
+        
+        async cancelarReserva() {
+            const tituloDoLivro = await this.readlineUtil.question("Informe o nome do livro que terá a reserva cancelada: ");
+            await this.livroController.cancelarReserva(tituloDoLivro);
+        }
 
-    async listarReservadosPeloAluno() {
-        const alunoId = await this.readlineUtil.question("Informe o ID do aluno que deseja ver as reservas: ");
-        await this.livroController.listarReservadosPeloAluno(parseInt(alunoId, 10));
-    }
+        async listarReservadosPeloAluno() {
+            const alunoId = await this.readlineUtil.question("Informe o ID do aluno que deseja ver as reservas: ");
+            await this.livroController.listarReservadosPeloAluno(parseInt(alunoId, 10));
+        }
 
-}
+    }

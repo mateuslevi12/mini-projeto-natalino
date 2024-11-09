@@ -4,12 +4,11 @@ import { AlunoRepository } from '../models/aluno/aluno.repository';
 
 export class LivroController {
     private livrosRepository: LivrosRepository;
-    private alunoService: AlunoRepository;
+    private alunosRepository: AlunoRepository;
 
-    constructor() {
-        const apiService = new AxiosService();
-        this.livrosRepository = new LivrosRepository(apiService);
-        this.alunoService = new AlunoRepository(apiService);
+    constructor(livrosRepository: LivrosRepository, alunosRepository: AlunoRepository) {
+        this.livrosRepository = livrosRepository
+        this.alunosRepository = alunosRepository
     }
 
     async inicializar(): Promise<void> {
@@ -32,7 +31,7 @@ export class LivroController {
 
     async reservar(alunoId: number, titulo: string): Promise<void> {
         try {
-            const aluno = await this.alunoService.buscarPorId(alunoId);
+            const aluno = await this.alunosRepository.buscarPorId(alunoId);
             console.log(aluno)
             await this.livrosRepository.reservar(aluno, titulo);
             console.log({ message: `Livro '${titulo}' reservado com sucesso.` });
@@ -52,7 +51,8 @@ export class LivroController {
 
     async listarReservadosPeloAluno(alunoId: number): Promise<void> {
         try {
-            const aluno = await this.alunoService.buscarPorId(alunoId);
+            const aluno = await this.alunosRepository.buscarPorId(alunoId);
+            console.log(aluno)
             await this.livrosRepository.listarReservadosPeloAluno(aluno);
         } catch (error) {
             console.log({ message: 'Erro ao listar livros reservados.', error });

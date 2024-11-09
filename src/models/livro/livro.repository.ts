@@ -27,11 +27,13 @@ export class LivrosRepository implements ILivro {
     }
 
     private async buscarPorNome(tituloDoLivro: string) {
-        const livroEncontrado = this.livros.find(livro => livro.getTitulo() === tituloDoLivro)
+        const livroEncontrado = this.livros.find(livro => new Livro(livro).getTitulo() === tituloDoLivro)
+        console.log("livroEncontrado: ", livroEncontrado)
         return new Livro(livroEncontrado)
     }
 
     async reservar(aluno: Aluno, tituloDoLivro: string): Promise<void> {
+        console.log(aluno)
         const alunoEstaAtivo = aluno.getStatus() === "Ativo";
 
         if (alunoEstaAtivo) {
@@ -47,28 +49,33 @@ export class LivrosRepository implements ILivro {
                 livroEncontrado.setStatus("Reservado");
                 livroEncontrado.setReservadoPor(aluno)
 
-                const index = this.livros.findIndex(livro => livro.getId() === livroEncontrado.getId());
+                const index = this.livros.findIndex(livro => new Livro(livro).getId() === livroEncontrado.getId());
 
                 if (index !== -1) {
                     this.livros[index] = livroEncontrado;
                 }
 
                 console.log(livroEncontrado);
+                console.log(this.livros)
             } else {
                 console.log("Livro não encontrado para reserva.");
             }
         } else {
             console.log("Não foi possível reservar esse livro pois o aluno não está ativo.");
+            return
         }
     }
 
     async cancelarReserva(tituloDoLivro: string): Promise<void> {
         const livroEncontrado = this.livros.find(livro => livro.getTitulo() === tituloDoLivro);
         if (livroEncontrado) {
+            console.log(livroEncontrado)
             livroEncontrado.setStatus(null);
-
+            livroEncontrado.setReservadoPor(null);
+            
             const index = this.livros.findIndex(livro => livro.getId() === livroEncontrado.getId());
-
+            
+            console.log(livroEncontrado)
             if (index !== -1) {
                 this.livros[index] = livroEncontrado;
             }
@@ -78,6 +85,7 @@ export class LivrosRepository implements ILivro {
     }
 
     async listarReservadosPeloAluno(aluno: Aluno): Promise<void> {
-        console.log(this.livros.filter(livro => livro.getReservadoPor() && livro.getReservadoPor().getId() === aluno.getId()));
+        console.log(this.livros)
+        console.log(this.livros.filter(livro => new Livro(livro).getReservadoPor() && new Livro(livro).getReservadoPor().getId() === aluno.getId()));
     }
 }

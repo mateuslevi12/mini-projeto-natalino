@@ -5,9 +5,8 @@ import { Aluno } from '../models/aluno/aluno.entity';
 export class AlunoController {
     private alunoRepository: AlunoRepository;
 
-    constructor() {
-        const apiService = new AxiosService();
-        this.alunoRepository = new AlunoRepository(apiService);
+    constructor(alunoRepository: AlunoRepository) {
+        this.alunoRepository = alunoRepository
     }
 
     async inicializar(): Promise<void> {

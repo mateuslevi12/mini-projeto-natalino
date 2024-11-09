@@ -1,23 +1,35 @@
+import { AlunoController } from "./controllers/aluno.controller";
+import { DisciplinaController } from "./controllers/disciplina.controller";
+import { LivroController } from "./controllers/livro.controller";
+import { AlunoRepository } from "./models/aluno/aluno.repository";
+import { DisciplinaRepository } from "./models/disciplina/disciplina.repository";
+import { LivrosRepository } from "./models/livro/livro.repository";
+import { AxiosService } from "./utils/axiosService";
 import { ReadlineUtil } from "./utils/readline";
 import { AlunoView } from "./views/aluno.view";
 import { DisciplinaView } from "./views/disciplina.view";
 import { LivroView } from "./views/livro.view";
 
-async function iniciar() {
-
-}
-
 async function main() {
 
     const readline = new ReadlineUtil();
+    const apiService = new AxiosService();
 
-    const alunoView = new AlunoView();
-    const livroView = new LivroView();
-    const disciplinaView = new DisciplinaView();
+    const alunosRepository = new AlunoRepository(apiService)
+    const disciplinaRepository = new DisciplinaRepository(apiService);
+    const livrosRepository = new LivrosRepository(apiService);
 
-    await alunoView.initialize();
-    await livroView.initialize();
-    await disciplinaView.initialize();
+    const alunoController = new AlunoController(alunosRepository);
+    const livroController = new LivroController(livrosRepository, alunosRepository);
+    const disciplinaController = new DisciplinaController(disciplinaRepository, alunosRepository);
+
+    const alunoView = new AlunoView(alunoController, readline);
+    const livroView = new LivroView(livroController, readline);
+    const disciplinaView = new DisciplinaView(disciplinaController, readline);
+
+    await alunoView.inicializar();
+    await livroView.inicializar();
+    await disciplinaView.inicializar();
 
     while (true) {
         const opcao = await readline.question(`Informe a opção desejada:
@@ -109,9 +121,4 @@ async function main() {
     }
 }
 
-async function rodar() {
-    await iniciar();
-    await main();
-}
-
-rodar();
+main();

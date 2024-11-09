@@ -5,12 +5,12 @@ export class AlunoView {
     private alunoController: AlunoController;
     private readlineUtil: ReadlineUtil;
 
-    constructor() {
-        this.alunoController = new AlunoController();
-        this.readlineUtil = new ReadlineUtil();
+    constructor(alunoController: AlunoController, readlineUtil: ReadlineUtil) {
+        this.alunoController = alunoController
+        this.readlineUtil = readlineUtil;
     }
 
-    async initialize() {
+    async inicializar() {
         await this.alunoController.inicializar();
     }
 
@@ -30,7 +30,6 @@ export class AlunoView {
 
             if (isNaN(alunoId)) {
                 console.error("Entrada inválida. Por favor, digite um número.");
-                this.readlineUtil.close();
                 return;
             }
 
@@ -42,13 +41,14 @@ export class AlunoView {
                 console.log("Aluno não encontrado.");
             }
 
-            this.readlineUtil.close();
-            
-            return aluno
+            return aluno;
 
         } catch (error) {
             console.error("Erro ao buscar aluno por ID:", error);
-            this.readlineUtil.close();
         }
+    }
+
+    closeReadline() {
+        this.readlineUtil.close();
     }
 }

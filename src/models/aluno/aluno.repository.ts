@@ -15,6 +15,7 @@ export class AlunoRepository implements IAluno {
     async inicializar(): Promise<void> {
         const response = await this.apiService.get<Aluno[]>(this.baseUrl)
         this.alunos = response;
+        console.log(this.alunos.length)
     }
 
     async listarAlunosDeHistoria(): Promise<Aluno[]> {
@@ -30,6 +31,7 @@ export class AlunoRepository implements IAluno {
     }
 
     async buscarPorId(id: number): Promise<Aluno> {
+        console.log(this.alunos.length)
         const aluno = this.alunos.find((aluno) => new Aluno(aluno).getId() == id);
         return new Aluno(aluno)
     }
