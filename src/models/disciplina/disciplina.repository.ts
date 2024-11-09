@@ -41,18 +41,18 @@ export class DisciplinaRepository implements IDisciplina {
         }
     }
 
-    async buscarDisciplinasQueEstaMatriculado(aluno: Aluno): Promise<Disciplina[] | []> {
+    async buscarDisciplinasQueEstaMatriculado(aluno: Aluno): Promise<Disciplina[]> {
         return this.disciplinas
-        .filter(disciplina => disciplina.curso === aluno.getCurso())
+        .filter(disciplina => disciplina.getCurso() === aluno.getCurso())
         .map(disciplina => new Disciplina(disciplina))
     }
 
     async removerDisciplinaDaMatricula(aluno: Aluno, nomeDaDisciplina: string): Promise<void> {
         const disciplinas = await this.buscarDisciplinasQueEstaMatriculado(aluno)
-        const disciplinaEncontrada = disciplinas.find(disciplina => disciplina.nome == nomeDaDisciplina)
+        const disciplinaEncontrada = disciplinas.find(disciplina => disciplina.getNome() == nomeDaDisciplina)
 
         if (disciplinaEncontrada) {
-            const index = disciplinas.findIndex(disciplina => disciplina.id == disciplinaEncontrada.id)
+            const index = disciplinas.findIndex(disciplina => disciplina.getId() == disciplinaEncontrada.getId())
             if (index !== -1) {
                 disciplinas.splice(index, 1)
                 console.log(`Disciplina '${nomeDaDisciplina}' removida com sucesso da matrícula do aluno.`);

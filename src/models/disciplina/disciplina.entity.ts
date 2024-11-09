@@ -1,10 +1,22 @@
 export class Disciplina {
-    public id: string
-    public nome: string
-    public curso: string
+    protected id: string
+    protected nome: string
+    protected curso: string
 
     constructor(data: Partial<Disciplina>) {
         Object.assign(this, data);
+    }
+
+    getId() {
+        return this.id
+    }
+
+    getNome() {
+        return this.nome
+    }
+
+    getCurso() {
+        return this.curso
     }
 
 }
