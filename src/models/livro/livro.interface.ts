@@ -6,4 +6,5 @@ export interface ILivro {
     listar(): Promise<Livro[]>
     reservar(aluno: Aluno, tituloDoLivro: string): Promise<void>
     cancelarReserva(tituloDoLivro: string): Promise<void>
+    listarReservadosPeloAluno(aluno: Aluno): Promise<void>
 }

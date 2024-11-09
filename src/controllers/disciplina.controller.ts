@@ -51,4 +51,13 @@ export class DisciplinaController {
         }
     }
 
+    async removerDisciplinaDaMatricula(alunoId: number, nomeDaMatricula: string): Promise<void> {
+        try {
+            const aluno = await this.alunoService.buscarPorId(alunoId);
+            await this.disciplinaRepository.removerDisciplinaDaMatricula(aluno, nomeDaMatricula);
+        } catch (error) {
+            console.log({ message: 'Erro ao remover disciplina.', error });
+        }
+    }
+
 }

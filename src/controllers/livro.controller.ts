@@ -14,13 +14,13 @@ export class LivroController {
 
     async inicializar(): Promise<void> {
         try {
-           await this.livrosRepository.inicializar();
-           console.log({ message: 'Livros inicializados com sucesso.' });
+            await this.livrosRepository.inicializar();
+            console.log({ message: 'Livros inicializados com sucesso.' });
         } catch (error) {
             console.log({ message: 'Erro ao inicializar livros.', error });
         }
     }
-    
+
     async listar(): Promise<void> {
         try {
             const livros = await this.livrosRepository.listar();
@@ -44,9 +44,18 @@ export class LivroController {
     async cancelarReserva(titulo: string): Promise<void> {
         try {
             await this.livrosRepository.cancelarReserva(titulo);
-           console.log({ message: `Reserva do livro '${titulo}' cancelada com sucesso.` });
+            console.log({ message: `Reserva do livro '${titulo}' cancelada com sucesso.` });
         } catch (error) {
             console.log({ message: 'Erro ao cancelar reserva.', error });
+        }
+    }
+
+    async listarReservadosPeloAluno(alunoId: number): Promise<void> {
+        try {
+            const aluno = await this.alunoService.buscarPorId(alunoId);
+            await this.livrosRepository.listarReservadosPeloAluno(aluno);
+        } catch (error) {
+            console.log({ message: 'Erro ao listar livros reservados.', error });
         }
     }
 }

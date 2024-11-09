@@ -22,7 +22,7 @@ export class AlunoRepository implements IAluno {
     }
 
     async buscarPorId(id: number): Promise<Aluno | null> {
-        const aluno = this.alunos.find((aluno) => aluno.id == id);
+        const aluno = this.alunos.find((aluno) => aluno.getId() == id);
         return new Aluno(aluno)
     }
 }

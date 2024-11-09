@@ -28,4 +28,10 @@ export class DisciplinaView {
         await this.disciplinaController.matriculaEmHistoria(parseInt(alunoId, 10));
     }
 
+    async removerDisciplinaDaMatricula() {
+        const alunoId = await this.readlineUtil.question("Informe o ID do aluno que deseja remover uma disciplina: ");
+        const nomeDaDisciplina = await this.readlineUtil.question("Informe o nome da disciplina: ");
+        await this.disciplinaController.removerDisciplinaDaMatricula(parseInt(alunoId, 10), nomeDaDisciplina);
+    }
+
 }

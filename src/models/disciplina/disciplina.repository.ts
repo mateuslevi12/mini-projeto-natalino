@@ -30,7 +30,7 @@ export class DisciplinaRepository implements IDisciplina {
             aluno.setCurso("História")
 
             const alunos = await new AlunoRepository(this.apiService).listar()
-            const index = alunos.findIndex(al => al.id === aluno.id)
+            const index = alunos.findIndex(al => al.getId() === aluno.getId())
 
             if (index !== -1) {
                 alunos[index] = aluno
@@ -47,7 +47,19 @@ export class DisciplinaRepository implements IDisciplina {
         .map(disciplina => new Disciplina(disciplina))
     }
 
-    // async removerDisciplinaDaMatriculaDoAluno(aluno: Aluno, curso: string) {
+    async removerDisciplinaDaMatricula(aluno: Aluno, nomeDaDisciplina: string): Promise<void> {
+        const disciplinas = await this.buscarDisciplinasQueEstaMatriculado(aluno)
+        const disciplinaEncontrada = disciplinas.find(disciplina => disciplina.nome == nomeDaDisciplina)
 
-    // }
+        if (disciplinaEncontrada) {
+            const index = disciplinas.findIndex(disciplina => disciplina.id == disciplinaEncontrada.id)
+            if (index !== -1) {
+                disciplinas.splice(index, 1)
+                console.log(`Disciplina '${nomeDaDisciplina}' removida com sucesso da matrícula do aluno.`);
+            }
+        } else {
+            console.log(`Disciplina '${nomeDaDisciplina}' não encontrada na matrícula do aluno.`);
+            return
+        }
+    }
 }

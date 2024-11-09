@@ -1,12 +1,16 @@
 export class Aluno {
-    public id: number
-    public nome: string
-    public curso: string
-    public modalidade: string
-    public status: string
+    protected id: number
+    protected nome: string
+    protected curso: string
+    protected modalidade: string
+    protected status: string
 
     constructor(data: Partial<Aluno>) {
         Object.assign(this, data)
+    }
+
+    getId() {
+        return this.id
     }
 
     setCurso(curso: string) {

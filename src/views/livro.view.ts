@@ -29,4 +29,9 @@ export class LivroView {
         await this.livroController.cancelarReserva(tituloDoLivro);
     }
 
+    async listarReservadosPeloAluno() {
+        const alunoId = await this.readlineUtil.question("Informe o ID do aluno que deseja ver as reservas: ");
+        await this.livroController.listarReservadosPeloAluno(parseInt(alunoId, 10));
+    }
+
 }
