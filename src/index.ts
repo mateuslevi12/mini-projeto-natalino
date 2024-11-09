@@ -1,10 +1,12 @@
 import { LivroController } from "./controllers/livro.controller"
+import { AlunoView } from "./views/aluno.view"
 
 async function iniciar() {
-    const livroController = new LivroController()
-    await livroController.inicializarLivros()
-    await livroController.inicializarAlunos()
-    await livroController.reservarLivro(2, 'Orgulho e Preconceito')
+    const aluno = new AlunoView()
+    await aluno.initialize()
+    await aluno.listar()
+    await aluno.buscarPorId()
+    
 }
 
 iniciar()
