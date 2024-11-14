@@ -15,6 +15,7 @@ async function startServer() {
   const apiService = new AxiosService();
   const alunoInitialize = new AlunoInitialize(apiService);
   const livroInitialize = new LivroInitialize(apiService);
+  
   const alunos = await alunoInitialize.inicializar();
   const livros = await livroInitialize.inicializar();
 
