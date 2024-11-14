@@ -1,11 +1,11 @@
+import { AxiosService } from "./_utils/axiosService";
+import { ReadlineUtil } from "./_utils/readline";
 import { AlunoController } from "./controllers/aluno.controller";
 import { DisciplinaController } from "./controllers/disciplina.controller";
 import { LivroController } from "./controllers/livro.controller";
 import { AlunoRepository } from "./models/aluno/aluno.repository";
 import { DisciplinaRepository } from "./models/disciplina/disciplina.repository";
 import { LivrosRepository } from "./models/livro/livro.repository";
-import { AxiosService } from "./utils/axiosService";
-import { ReadlineUtil } from "./utils/readline";
 import { AlunoView } from "./views/aluno.view";
 import { DisciplinaView } from "./views/disciplina.view";
 import { LivroView } from "./views/livro.view";

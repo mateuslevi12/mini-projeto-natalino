@@ -1,21 +1,11 @@
-import { ApiService } from "../../utils/apiService.interface";
 import { Aluno } from "./aluno.entity";
-import { IAluno } from "./aluno.interface";
+import { IAlunoRepository } from "./aluno.interface";
 
-export class AlunoRepository implements IAluno {
+export class AlunoRepository implements IAlunoRepository {
+    private alunos: Aluno[]; 
 
-    private baseUrl: string = 'https://rmi6vdpsq8.execute-api.us-east-2.amazonaws.com/msAluno';
-    private alunos: Aluno[] = [];
-    private apiService: ApiService
-
-    constructor(apiService: ApiService) {
-        this.apiService = apiService;
-    }
-
-    async inicializar(): Promise<void> {
-        const response = await this.apiService.get<Aluno[]>(this.baseUrl)
-        this.alunos = response;
-        console.log(this.alunos.length)
+    constructor(alunos: Aluno[]) {
+        this.alunos = alunos;
     }
 
     async listarAlunosDeHistoria(): Promise<Aluno[]> {

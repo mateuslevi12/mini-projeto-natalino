@@ -1,5 +1,5 @@
+import { ReadlineUtil } from "../_utils/readline";
 import { AlunoController } from "../controllers/aluno.controller";
-import { ReadlineUtil } from "../utils/readline";
 
 export class AlunoView {
     private alunoController: AlunoController;

@@ -44,7 +44,8 @@ export class DisciplinaController {
     async matriculaEmHistoria(alunoId: number): Promise<void> {
         try {
             const aluno = await this.alunosRepository.buscarPorId(alunoId);
-            await this.disciplinaRepository.matriculaEmHistoria(aluno);
+            const alunos = await this.alunosRepository.listar()
+            await this.disciplinaRepository.matriculaEmHistoria(aluno, alunos);
         } catch (error) {
             console.log({ message: 'Erro ao realizar matricula.', error });
         }

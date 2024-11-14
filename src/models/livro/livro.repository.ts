@@ -1,25 +1,13 @@
-import { ApiService } from '../../utils/apiService.interface';
 import { Aluno } from '../aluno/aluno.entity';
 import { Livro } from './livro.entity';
-import { ILivro } from './livro.interface';
+import { ILivroRepository } from './livro.interface';
 
-export class LivrosRepository implements ILivro {
+export class LivrosRepository implements ILivroRepository {
 
-    private baseUrl: string = 'https://qiiw8bgxka.execute-api.us-east-2.amazonaws.com/acervo/biblioteca';
-    private livros: Livro[] = []
-    public apiService: ApiService
+    private livros: Livro[]; 
 
-    constructor(apiService: ApiService) {
-        this.apiService = apiService;
-    }
-
-    async inicializar(): Promise<void> {
-        const response = await this.apiService.get<Livro[]>(this.baseUrl);
-        if (Array.isArray(response)) {
-            this.livros = response;
-        } else {
-            console.error("Formato inesperado de resposta da API:", response);
-        }
+    constructor(livros: Livro[]) {
+        this.livros = livros;
     }
 
     async listar(): Promise<Livro[]> {
@@ -86,6 +74,11 @@ export class LivrosRepository implements ILivro {
 
     async listarReservadosPeloAluno(aluno: Aluno): Promise<void> {
         console.log(this.livros)
-        console.log(this.livros.filter(livro => new Livro(livro).getReservadoPor() && new Livro(livro).getReservadoPor().getId() === aluno.getId()));
+        const reservados = this.livros.filter(livro => new Livro(livro).getReservadoPor() && new Livro(livro).getReservadoPor().getId() === aluno.getId())
+        if (reservados.length > 0) {
+            console.log(reservados)
+        } else {
+            console.log(`Nenhum livro reservador por ${JSON.stringify(aluno)}`);
+        }
     }
 }

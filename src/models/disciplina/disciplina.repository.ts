@@ -1,39 +1,33 @@
-import { ApiService } from '../../utils/apiService.interface';
 import { Aluno } from '../aluno/aluno.entity';
 import { AlunoRepository } from '../aluno/aluno.repository';
 import { Disciplina } from './disciplina.entity';
-import { IDisciplina } from './disciplina.interface';
+import { IDisciplinaRepository } from './disciplina.interface';
 
-export class DisciplinaRepository implements IDisciplina {
-    
-    private baseUrl: string = 'https://sswfuybfs8.execute-api.us-east-2.amazonaws.com/disciplinaServico/msDisciplina';
-    private disciplinas: Disciplina[] = []
-    private apiService: ApiService
+export class DisciplinaRepository implements IDisciplinaRepository {
+    private disciplinas: Disciplina[]
 
-    constructor(apiService: ApiService) {
-        this.apiService = apiService;
+    constructor(disciplinas: Disciplina[]) {
+        this.disciplinas = disciplinas
     }
-
-    async inicializar(): Promise<void> {
-        const response = await this.apiService.get<Disciplina[]>(this.baseUrl);
-        this.disciplinas = response;
-    }
-
+  
     async listar(): Promise<Disciplina[]> {
         return this.disciplinas.map(disciplina => new Disciplina(disciplina))
     }
 
-    async matriculaEmHistoria(aluno: Aluno): Promise<void> {
+    async matriculaEmHistoria(aluno: Aluno, alunos: Aluno[]): Promise<void> {
         const alunoEstaAtivo = aluno.getStatus() == "Ativo"
 
         if (alunoEstaAtivo) {
             aluno.setCurso("História")
 
-            const alunos = await new AlunoRepository(this.apiService).listar()
-            const index = alunos.findIndex(al => al.getId() === aluno.getId())
-
+            console.log(aluno)
+            const index = alunos.findIndex(al => new Aluno(al).getId() === aluno.getId())
+            console.log(index)
             if (index !== -1) {
+                console.log(alunos[index])
                 alunos[index] = aluno
+                console.log("apos mudança",alunos[index])
+                console.log(alunos)
             }
             
         } else {
@@ -42,13 +36,16 @@ export class DisciplinaRepository implements IDisciplina {
     }
 
     async buscarDisciplinasQueEstaMatriculado(aluno: Aluno): Promise<Disciplina[]> {
+        console.log(aluno)
         return this.disciplinas
-        .filter(disciplina => disciplina.getCurso() === aluno.getCurso())
+        .filter(disciplina => new Disciplina(disciplina).getCurso() === aluno.getCurso())
         .map(disciplina => new Disciplina(disciplina))
-    }
+    }   
 
     async removerDisciplinaDaMatricula(aluno: Aluno, nomeDaDisciplina: string): Promise<void> {
+
         const disciplinas = await this.buscarDisciplinasQueEstaMatriculado(aluno)
+        console.log(disciplinas)
         const disciplinaEncontrada = disciplinas.find(disciplina => disciplina.getNome() == nomeDaDisciplina)
 
         if (disciplinaEncontrada) {

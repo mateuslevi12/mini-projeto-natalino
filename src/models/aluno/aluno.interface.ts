@@ -1,7 +1,6 @@
 import { Aluno } from "./aluno.entity"
 
-export interface IAluno {
-    inicializar(): Promise<void>
+export interface IAlunoRepository {
     listarAlunosDeHistoria(): Promise<Aluno[]>
     listar(): Promise<Aluno[]>
     buscarPorId(id: number): Promise<Aluno | null>
