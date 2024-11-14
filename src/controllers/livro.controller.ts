@@ -1,27 +1,27 @@
 import { Request, Response } from 'express';
-import { LivrosRepository } from '../models/livro/livro.repository';
 import { AlunoRepository } from '../models/aluno/aluno.repository';
 import { listarLivros } from '../models/livro/useCases/listarLivros.useCase';
 import { reservarLivroUseCase } from '../models/livro/useCases/reservarLivro.useCase';
 import { cancelarReservaUseCase } from '../models/livro/useCases/cancelarReserva.useCase';
 import { listarReservadosPeloAlunoUseCase } from '../models/livro/useCases/listarReservadosPeloAluno.useCase';
-import { AlunoInitialize } from '../models/aluno/aluno.init';
 import { buscarPorIdUseCase } from '../models/aluno/useCases/buscarPorId.useCase';
+import { LivrosRepository } from '../models/livro/livro.repository';
+import { LivroInitialize } from '../models/livro/livro.init';
 
 export class LivroController {
     private livrosRepository: LivrosRepository;
     private alunosRepository: AlunoRepository;
-    private alunoInit: AlunoInitialize;
+    private livroInit: LivroInitialize;
 
-    constructor(livrosRepository: LivrosRepository, alunosRepository: AlunoRepository, alunoInit: AlunoInitialize) {
+    constructor(livrosRepository: LivrosRepository, alunosRepository: AlunoRepository, livroInit: LivroInitialize) {
         this.livrosRepository = livrosRepository;
         this.alunosRepository = alunosRepository;
-        this.alunoInit = alunoInit;
+        this.livroInit = livroInit;
     }
 
     async inicializar(req: Request, res: Response): Promise<void> {
         try {
-            await this.alunoInit.inicializar();
+            await this.livroInit.inicializar();
             res.status(200).json({ message: 'Inicialização concluída com sucesso.' });
         } catch (error) {
             res.status(500).json({ message: 'Erro ao inicializar livros.', error });
@@ -39,19 +39,21 @@ export class LivroController {
 
     async reservar(req: Request, res: Response): Promise<void> {
         try {
-            const { titulo } = req.body;
             const alunoId = parseInt(req.params.alunoId);
+            const { titulo } = req.body;
+
             const aluno = await buscarPorIdUseCase(this.alunosRepository, { id: alunoId });
             await reservarLivroUseCase(this.livrosRepository, { aluno: aluno, tituloDoLivro: titulo });
             res.status(200).json({ message: 'Livro reservado com sucesso.' });
         } catch (error) {
+            console.log(error);
             res.status(500).json({ message: 'Erro ao reservar livro.', error });
         }
     }
 
     async cancelarReserva(req: Request, res: Response): Promise<void> {
         try {
-            const { titulo } = req.body;
+            const { titulo } = req.params;
             await cancelarReservaUseCase(this.livrosRepository, { tituloDoLivro: titulo });
             res.status(200).json({ message: 'Reserva cancelada com sucesso.' });
         } catch (error) {

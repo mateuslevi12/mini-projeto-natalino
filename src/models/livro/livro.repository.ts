@@ -72,13 +72,13 @@ export class LivrosRepository implements ILivroRepository {
         }
     }
 
-    async listarReservadosPeloAluno(aluno: Aluno): Promise<void> {
-        console.log(this.livros)
+    async listarReservadosPeloAluno(aluno: Aluno): Promise<Livro[] | string> {
         const reservados = this.livros.filter(livro => new Livro(livro).getReservadoPor() && new Livro(livro).getReservadoPor().getId() === aluno.getId())
+        console.log(this.livros)
         if (reservados.length > 0) {
-            console.log(reservados)
+            return reservados
         } else {
-            console.log(`Nenhum livro reservador por ${JSON.stringify(aluno)}`);
+            return `Nenhum livro reservador por ${JSON.stringify(aluno)}`
         }
     }
 }

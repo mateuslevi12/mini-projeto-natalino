@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "mini-projeto-natalino",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
