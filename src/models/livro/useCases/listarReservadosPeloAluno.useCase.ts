@@ -6,6 +6,6 @@ interface IListarReservadoProps {
     aluno: Aluno
 }
 
-export async function listarReservadosPeloAluno(livrosRespository: ILivroRepository, data: IListarReservadoProps): Promise<void> {
+export async function listarReservadosPeloAlunoUseCase(livrosRespository: ILivroRepository, data: IListarReservadoProps): Promise<void> {
     await livrosRespository.listarReservadosPeloAluno(data.aluno)
 }

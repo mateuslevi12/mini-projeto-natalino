@@ -3,6 +3,7 @@ import { IInitialize } from "../../_utils/IInitialize";
 import { Disciplina } from "./disciplina.entity";
 
 export class DisciplinaInitialize implements IInitialize<Disciplina> {
+    
     private baseUrl: string = 'https://sswfuybfs8.execute-api.us-east-2.amazonaws.com/disciplinaServico/msDisciplina';
     private disciplinas: Disciplina[] = []
     private apiService: ApiService

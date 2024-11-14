@@ -1,61 +1,72 @@
-import { AxiosService } from '../utils/axiosService';
+import { Request, Response } from 'express';
 import { LivrosRepository } from '../models/livro/livro.repository';
 import { AlunoRepository } from '../models/aluno/aluno.repository';
+import { listarLivros } from '../models/livro/useCases/listarLivros.useCase';
+import { reservarLivroUseCase } from '../models/livro/useCases/reservarLivro.useCase';
+import { cancelarReservaUseCase } from '../models/livro/useCases/cancelarReserva.useCase';
+import { listarReservadosPeloAlunoUseCase } from '../models/livro/useCases/listarReservadosPeloAluno.useCase';
+import { AlunoInitialize } from '../models/aluno/aluno.init';
+import { buscarPorIdUseCase } from '../models/aluno/useCases/buscarPorId.useCase';
 
 export class LivroController {
     private livrosRepository: LivrosRepository;
     private alunosRepository: AlunoRepository;
+    private alunoInit: AlunoInitialize;
 
-    constructor(livrosRepository: LivrosRepository, alunosRepository: AlunoRepository) {
-        this.livrosRepository = livrosRepository
-        this.alunosRepository = alunosRepository
+    constructor(livrosRepository: LivrosRepository, alunosRepository: AlunoRepository, alunoInit: AlunoInitialize) {
+        this.livrosRepository = livrosRepository;
+        this.alunosRepository = alunosRepository;
+        this.alunoInit = alunoInit;
     }
 
-    async inicializar(): Promise<void> {
+    async inicializar(req: Request, res: Response): Promise<void> {
         try {
-            await this.livrosRepository.inicializar();
-            console.log({ message: 'Livros inicializados com sucesso.' });
+            await this.alunoInit.inicializar();
+            res.status(200).json({ message: 'Inicialização concluída com sucesso.' });
         } catch (error) {
-            console.log({ message: 'Erro ao inicializar livros.', error });
+            res.status(500).json({ message: 'Erro ao inicializar livros.', error });
         }
     }
 
-    async listar(): Promise<void> {
+    async listar(req: Request, res: Response): Promise<void> {
         try {
-            const livros = await this.livrosRepository.listar();
-            console.log(livros)
+            const livros = await listarLivros(this.livrosRepository);
+            res.status(200).json(livros);
         } catch (error) {
-            console.log({ message: 'Erro ao listar livros.', error });
+            res.status(500).json({ message: 'Erro ao listar livros.', error });
         }
     }
 
-    async reservar(alunoId: number, titulo: string): Promise<void> {
+    async reservar(req: Request, res: Response): Promise<void> {
         try {
-            const aluno = await this.alunosRepository.buscarPorId(alunoId);
-            console.log(aluno)
-            await this.livrosRepository.reservar(aluno, titulo);
-            console.log({ message: `Livro '${titulo}' reservado com sucesso.` });
+            const { titulo } = req.body;
+            const alunoId = parseInt(req.params.alunoId);
+            const aluno = await buscarPorIdUseCase(this.alunosRepository, { id: alunoId });
+            await reservarLivroUseCase(this.livrosRepository, { aluno: aluno, tituloDoLivro: titulo });
+            res.status(200).json({ message: 'Livro reservado com sucesso.' });
         } catch (error) {
-            console.log({ message: 'Erro ao reservar livro.', error });
+            res.status(500).json({ message: 'Erro ao reservar livro.', error });
         }
     }
 
-    async cancelarReserva(titulo: string): Promise<void> {
+    async cancelarReserva(req: Request, res: Response): Promise<void> {
         try {
-            await this.livrosRepository.cancelarReserva(titulo);
-            console.log({ message: `Reserva do livro '${titulo}' cancelada com sucesso.` });
+            const { titulo } = req.body;
+            await cancelarReservaUseCase(this.livrosRepository, { tituloDoLivro: titulo });
+            res.status(200).json({ message: 'Reserva cancelada com sucesso.' });
         } catch (error) {
-            console.log({ message: 'Erro ao cancelar reserva.', error });
+            res.status(500).json({ message: 'Erro ao cancelar reserva.', error });
         }
     }
 
-    async listarReservadosPeloAluno(alunoId: number): Promise<void> {
+    async listarReservadosPeloAluno(req: Request, res: Response): Promise<void> {
         try {
-            const aluno = await this.alunosRepository.buscarPorId(alunoId);
-            console.log(aluno)
-            await this.livrosRepository.listarReservadosPeloAluno(aluno);
+            const alunoId = parseInt(req.params.alunoId);
+            const aluno = await buscarPorIdUseCase(this.alunosRepository, { id: alunoId });
+            const livrosReservados = await listarReservadosPeloAlunoUseCase(this.livrosRepository, { aluno });
+            res.status(200).json(livrosReservados);
         } catch (error) {
-            console.log({ message: 'Erro ao listar livros reservados.', error });
+            res.status(500).json({ message: 'Erro ao listar livros reservados pelo aluno.', error });
         }
     }
 }

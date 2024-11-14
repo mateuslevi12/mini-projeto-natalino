@@ -1,4 +1,3 @@
-import { AxiosService } from '../utils/axiosService';
 import { AlunoRepository } from '../models/aluno/aluno.repository';
 import { DisciplinaRepository } from '../models/disciplina/disciplina.repository';
 import { Disciplina } from '../models/disciplina/disciplina.entity';

@@ -6,6 +6,6 @@ interface IReservarLivroProps {
     tituloDoLivro: string
 }
 
-export async function reservarLivro(livroRepository: ILivroRepository, data: IReservarLivroProps): Promise<void> {
+export async function reservarLivroUseCase(livroRepository: ILivroRepository, data: IReservarLivroProps): Promise<void> {
     await livroRepository.reservar(data.aluno, data.tituloDoLivro)
 }

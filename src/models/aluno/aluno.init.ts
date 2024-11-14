@@ -13,7 +13,7 @@ export class AlunoInitialize implements IInitialize<Aluno> {
 
     async inicializar(): Promise<Aluno[]> {
         const response = await this.apiService.get<Aluno[]>(this.baseUrl)
-        this.alunos = response;
+        this.alunos = response.filter(aluno => new Aluno(aluno).getCurso() == 'História' && new Aluno(aluno).getStatus() == "Ativo" && new Aluno(aluno).getModalidade() == "Presencial");
         return this.alunos
     }
 }

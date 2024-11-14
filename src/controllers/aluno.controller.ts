@@ -1,39 +1,48 @@
-import { AxiosService } from '../utils/axiosService';
+import { Request, Response } from 'express';
 import { AlunoRepository } from '../models/aluno/aluno.repository';
 import { Aluno } from '../models/aluno/aluno.entity';
+import { listarAlunosHistoriaUseCase } from '../models/aluno/useCases/listarAlunosHistoria.useCase';
+import { buscarPorIdUseCase } from '../models/aluno/useCases/buscarPorId.useCase';
+import { AlunoInitialize } from '../models/aluno/aluno.init';
 
 export class AlunoController {
     private alunoRepository: AlunoRepository;
+    private alunoInit: AlunoInitialize;
 
-    constructor(alunoRepository: AlunoRepository) {
-        this.alunoRepository = alunoRepository
+    constructor(alunoRepository: AlunoRepository, alunoInit: AlunoInitialize) {
+        this.alunoRepository = alunoRepository;
+        this.alunoInit = alunoInit;
     }
 
-    async inicializar(): Promise<void> {
+    async inicializar(req: Request, res: Response): Promise<void> {
         try {
-            await this.alunoRepository.inicializar();
-            console.log({ message: 'Alunos inicializados com sucesso.' });
+            await this.alunoInit.inicializar();
+            res.status(200).json({ message: 'Alunos inicializados com sucesso.' });
         } catch (error) {
-            console.log({ message: 'Erro ao inicializar alunos.', error });
+            res.status(500).json({ message: 'Erro ao inicializar alunos.', error });
         }
     }
 
-    async listarAlunosDeHistoria(): Promise<void> {
+    async listarAlunosDeHistoria(req: Request, res: Response): Promise<void> {
         try {
-            const alunos = await this.alunoRepository.listarAlunosDeHistoria();
-            console.log(alunos)
+            const alunos = await listarAlunosHistoriaUseCase(this.alunoRepository);
+            res.status(200).json(alunos);
         } catch (error) {
-            console.log({ message: 'Erro ao listar alunos.', error });
+            res.status(500).json({ message: 'Erro ao listar alunos.', error });
         }
     }
 
-    async buscarPorId(alunoId: number): Promise<Aluno | null> {
+    async buscarPorId(req: Request, res: Response): Promise<void> {
         try {
-            const aluno = await this.alunoRepository.buscarPorId(alunoId);
-            return aluno
+            const alunoId = parseInt(req.params.id);
+            const aluno = await buscarPorIdUseCase(this.alunoRepository, { id: alunoId });
+            if (aluno) {
+                res.status(200).json(aluno);
+            } else {
+                res.status(404).json({ message: 'Aluno não encontrado.' });
+            }
         } catch (error) {
-            console.log({ message: 'Erro ao listar aluno.', error });
+            res.status(500).json({ message: 'Erro ao buscar aluno.', error });
         }
     }
-
 }

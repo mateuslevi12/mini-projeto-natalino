@@ -1,6 +1,10 @@
 import { Aluno } from "../aluno.entity";
 import { IAlunoRepository } from "../aluno.interface";
 
-export async function buscarPorId(alunosRepository: IAlunoRepository, id: number): Promise<Aluno> {
-    return await alunosRepository.buscarPorId(id);
+interface IBuscarPorIdProps {
+    id: number;
+}
+
+export async function buscarPorIdUseCase(alunosRepository: IAlunoRepository, data: IBuscarPorIdProps): Promise<Aluno> {
+    return await alunosRepository.buscarPorId(data.id);
 }

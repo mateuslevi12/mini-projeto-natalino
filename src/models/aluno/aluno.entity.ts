@@ -25,4 +25,8 @@ export class Aluno {
         return this.status
     }
 
+    getModalidade() {
+        return this.modalidade
+    }
+
 }
