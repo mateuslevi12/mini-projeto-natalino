@@ -42,7 +42,7 @@ export class LivroController {
             const alunoId = parseInt(req.params.alunoId);
             const { titulo } = req.body;
 
-            const aluno = await buscarPorIdUseCase(this.alunosRepository, { id: alunoId });
+            const aluno = await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId });
             await reservarLivroUseCase(this.livrosRepository, { aluno: aluno, tituloDoLivro: titulo });
             res.status(200).json({ message: 'Livro reservado com sucesso.' });
         } catch (error) {
@@ -64,7 +64,7 @@ export class LivroController {
     async listarReservadosPeloAluno(req: Request, res: Response): Promise<void> {
         try {
             const alunoId = parseInt(req.params.alunoId);
-            const aluno = await buscarPorIdUseCase(this.alunosRepository, { id: alunoId });
+            const aluno = await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId });
             const livrosReservados = await listarReservadosPeloAlunoUseCase(this.livrosRepository, { aluno });
             res.status(200).json(livrosReservados);
         } catch (error) {

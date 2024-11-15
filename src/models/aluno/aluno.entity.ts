@@ -9,6 +9,10 @@ export class Aluno {
         Object.assign(this, data)
     }
 
+    getNome(): string {
+        return this.nome
+    }
+
     getId() {
         return this.id
     }

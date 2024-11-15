@@ -20,9 +20,14 @@ export class AlunoRepository implements IAlunoRepository {
             .map(aluno => new Aluno(aluno))
     }
 
-    async buscarPorId(id: number): Promise<Aluno> {
-        console.log(this.alunos.length)
-        const aluno = this.alunos.find((aluno) => new Aluno(aluno).getId() == id);
-        return new Aluno(aluno)
+    async buscarPorId(search: number | string): Promise<Aluno | undefined> {
+        console.log(search)
+        const aluno = this.alunos.find((aluno) => {
+            const instanciaDoAluno = new Aluno(aluno)
+            console.log(instanciaDoAluno.getNome().toLowerCase())
+            console.log('Nome search: ',String(search).toLowerCase())
+            return instanciaDoAluno.getId() == search || instanciaDoAluno.getNome().toLowerCase().includes(String(search).toLowerCase())
+        });
+        return aluno ? new Aluno(aluno) : undefined
     }
 }

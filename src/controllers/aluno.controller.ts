@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { AlunoRepository } from '../models/aluno/aluno.repository';
-import { Aluno } from '../models/aluno/aluno.entity';
 import { listarAlunosHistoriaUseCase } from '../models/aluno/useCases/listarAlunosHistoria.useCase';
 import { buscarPorIdUseCase } from '../models/aluno/useCases/buscarPorId.useCase';
 import { AlunoInitialize } from '../models/aluno/aluno.init';
@@ -34,8 +33,13 @@ export class AlunoController {
 
     async buscarPorId(req: Request, res: Response): Promise<void> {
         try {
-            const alunoId = parseInt(req.params.id);
-            const aluno = await buscarPorIdUseCase(this.alunoRepository, { id: alunoId });
+            const alunoIdOrNome = req.params.id;
+            
+            // Verifica se o parâmetro é um número ou uma string
+            const aluno = isNaN(Number(alunoIdOrNome))
+                ? await buscarPorIdUseCase(this.alunoRepository, { idOuNome: alunoIdOrNome.toLowerCase() })
+                : await buscarPorIdUseCase(this.alunoRepository, { idOuNome: parseInt(alunoIdOrNome) });
+            
             if (aluno) {
                 res.status(200).json(aluno);
             } else {
@@ -45,4 +49,5 @@ export class AlunoController {
             res.status(500).json({ message: 'Erro ao buscar aluno.', error });
         }
     }
+    
 }
