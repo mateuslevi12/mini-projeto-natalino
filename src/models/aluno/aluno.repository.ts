@@ -24,10 +24,13 @@ export class AlunoRepository implements IAlunoRepository {
         console.log(search)
         const aluno = this.alunos.find((aluno) => {
             const instanciaDoAluno = new Aluno(aluno)
-            console.log(instanciaDoAluno.getNome().toLowerCase())
-            console.log('Nome search: ',String(search).toLowerCase())
+
             return instanciaDoAluno.getId() == search || instanciaDoAluno.getNome().toLowerCase().includes(String(search).toLowerCase())
         });
-        return aluno ? new Aluno(aluno) : undefined
+        if (aluno) {
+            return new Aluno(aluno)
+        } else {
+            throw new Error('Aluno não encontrado')
+        }
     }
 }

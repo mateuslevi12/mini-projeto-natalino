@@ -4,8 +4,14 @@ meta {
   seq: 2
 }
 
-put {
-  url: http://localhost:3000/reservar/1
-  body: none
+post {
+  url: http://localhost:3000/livros/reservar/1
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "titulo": "Dom Quixote"
+  }
 }

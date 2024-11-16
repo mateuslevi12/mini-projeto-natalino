@@ -10,6 +10,8 @@ import cors from 'cors'
 import { DisciplinaInitialize } from './models/disciplina/disciplina.init';
 import { DisciplinaController } from './controllers/disciplina.controller';
 import { DisciplinaRepository } from './models/disciplina/disciplina.repository';
+import { MatriculaRepository } from './models/matricula/matricula.repository';
+import { MatriculaController } from './controllers/matricula.controller';
 
 const app = express();
 const PORT = 3000;
@@ -35,6 +37,9 @@ async function startServer() {
 
   const disciplinaRepository = new DisciplinaRepository(disciplinas)
   const disciplinaController = new DisciplinaController(disciplinaRepository, disciplinaInitialize)
+
+  const matriculaRepository = new MatriculaRepository(disciplinas, alunos)
+  const matriculaController = new MatriculaController(matriculaRepository, alunoRepository)
   
   app.get('/alunos', (req: Request, res: Response) => alunoController.listarAlunosDeHistoria(req, res));
   app.get('/alunos/:id', (req: Request, res: Response) => alunoController.buscarPorId(req, res));
@@ -45,6 +50,10 @@ async function startServer() {
   app.put('/livros/cancelar-reserva/:titulo',(req: Request, res: Response) => livroController.cancelarReserva(req, res))
 
   app.get('/disciplinas', (req: Request, res: Response) => disciplinaController.listar(req, res));
+
+  app.post('/matricula/historia/:alunoId', (req: Request, res: Response) => matriculaController.matricularEmHistoria(req, res));
+  app.get('/matricula/buscar-disciplinas/:alunoId', (req: Request, res: Response) => matriculaController.listarDisciplinasMatriculadas(req, res));
+  app.put('/matricula/remover-matricula/:alunoId', (req: Request, res: Response) => matriculaController.removerDisciplinaDaMatricula(req, res));
 
   app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

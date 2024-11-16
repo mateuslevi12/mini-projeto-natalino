@@ -4,54 +4,79 @@ import { IMatriculaRepository } from "./matricula.interface";
 
 export class MatriculaRepository implements IMatriculaRepository {
     private disciplinas: Disciplina[]
+    private alunos: Aluno[]
 
-    constructor(disciplinas: Disciplina[]) {
+    constructor(disciplinas: Disciplina[], alunos: Aluno[]) {
         this.disciplinas = disciplinas
+        this.alunos = alunos
     }
-    
-    async matriculaEmHistoria(aluno: Aluno, alunos: Aluno[]): Promise<void> {
-        const alunoEstaAtivo = aluno.getStatus() == "Ativo"
+
+    async matriculaEmHistoria(aluno: Aluno): Promise<Aluno | string> {
+        const alunoEstaAtivo = new Aluno(aluno).getStatus() == "Ativo"
 
         if (alunoEstaAtivo) {
             aluno.setCurso("História")
 
             console.log(aluno)
-            const index = alunos.findIndex(al => new Aluno(al).getId() === aluno.getId())
+            const index = this.alunos.findIndex(al => new Aluno(al).getId() === aluno.getId())
             console.log(index)
             if (index !== -1) {
-                console.log(alunos[index])
-                alunos[index] = aluno
-                console.log("apos mudança",alunos[index])
-                console.log(alunos)
+                console.log(this.alunos[index])
+                this.alunos[index] = aluno
+                console.log("apos mudança", this.alunos[index])
+                console.log(this.alunos)
             }
-            
+
+            return aluno
+
         } else {
-            console.log("Não foi possivel matricular esse aluno em História pois ele não esta ativo")
+            throw new Error("Não foi possivel matricular esse aluno em História pois ele não esta ativo")
         }
     }
 
-    async buscarDisciplinasQueEstaMatriculado(aluno: Aluno): Promise<Disciplina[]> {
-        console.log(aluno)
-        return this.disciplinas
-        .filter(disciplina => new Disciplina(disciplina).getCurso() === aluno.getCurso())
-        .map(disciplina => new Disciplina(disciplina))
-    }   
+    async buscarDisciplinasQueEstaMatriculado(aluno: Aluno): Promise<{ curso: string; disciplinas: string[] }[]> {
+        console.log(aluno);
+
+        const disciplinasFiltradas = this.disciplinas
+            .filter(disciplina => new Disciplina(disciplina).getCurso() === aluno.getCurso())
+            .map(disciplina => new Disciplina(disciplina));
+
+        const cursosMap = disciplinasFiltradas.reduce((acc, disciplina) => {
+            const curso = disciplina.getCurso();
+            if (!acc[curso]) {
+                acc[curso] = [];
+            }
+            acc[curso].push(disciplina.getNome());
+            return acc;
+        }, {} as { [curso: string]: string[] });
+
+        const resultado = Object.entries(cursosMap).map(([curso, disciplinas]) => ({
+            curso,
+            disciplinas,
+        }));
+
+        return resultado;
+    }
+
 
     async removerDisciplinaDaMatricula(aluno: Aluno, nomeDaDisciplina: string): Promise<void> {
+        const index = this.alunos.findIndex(
+            al => new Aluno(al).getCurso() === nomeDaDisciplina && new Aluno(al).getId() === aluno.getId()
+        );
 
-        const disciplinas = await this.buscarDisciplinasQueEstaMatriculado(aluno)
-        console.log(disciplinas)
-        const disciplinaEncontrada = disciplinas.find(disciplina => disciplina.getNome() == nomeDaDisciplina)
+        if (index !== -1) {
+            const alunoComMatricula = this.alunos[index];
 
-        if (disciplinaEncontrada) {
-            const index = disciplinas.findIndex(disciplina => disciplina.getId() == disciplinaEncontrada.getId())
-            if (index !== -1) {
-                disciplinas.splice(index, 1)
-                console.log(`Disciplina '${nomeDaDisciplina}' removida com sucesso da matrícula do aluno.`);
-            }
+            const alunoInstancia = new Aluno(alunoComMatricula);
+            alunoInstancia.setCurso(null);
+
+            this.alunos[index] = alunoInstancia;
         } else {
-            console.log(`Disciplina '${nomeDaDisciplina}' não encontrada na matrícula do aluno.`);
-            return
+            throw new Error("Aluno não possui matrícula no curso informado.");
         }
     }
+
+
+
+
 }
