@@ -21,7 +21,7 @@ export class AlunoRepository implements IAlunoRepository {
     }
 
     async buscarPorId(search: number | string): Promise<Aluno | undefined> {
-        console.log(search)
+ 
         const aluno = this.alunos.find((aluno) => {
             const instanciaDoAluno = new Aluno(aluno)
 

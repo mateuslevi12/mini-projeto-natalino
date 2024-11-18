@@ -36,34 +36,4 @@ export class DisciplinaController {
     }
 }
 
-// async buscarDisciplinasQueEstaMatriculado(alunoId: number): Promise<Disciplina[] | []> {
-//     try {
-//         const aluno = await this.alunosRepository.buscarPorId(alunoId);
-//         const disciplinas = await this.disciplinaRepository.buscarDisciplinasQueEstaMatriculado(aluno);
-//         console.log(disciplinas)
-//         return disciplinas
-//     } catch (error) {
-//         console.log({ message: 'Erro ao listar disciplinas.', error });
-//     }
-// }
-
-// async matriculaEmHistoria(alunoId: number): Promise<void> {
-//     try {
-//         const aluno = await this.alunosRepository.buscarPorId(alunoId);
-//         const alunos = await this.alunosRepository.listar()
-//         await this.disciplinaRepository.matriculaEmHistoria(aluno, alunos);
-//     } catch (error) {
-//         console.log({ message: 'Erro ao realizar matricula.', error });
-//     }
-// }
-
-// async removerDisciplinaDaMatricula(alunoId: number, nomeDaMatricula: string): Promise<void> {
-//     try {
-//         const aluno = await this.alunosRepository.buscarPorId(alunoId);
-//         await this.disciplinaRepository.removerDisciplinaDaMatricula(aluno, nomeDaMatricula);
-//     } catch (error) {
-//         console.log({ message: 'Erro ao remover disciplina.', error });
-//     }
-// }
-
 

@@ -1,10 +1,9 @@
 export class Matricula {
-    protected alunoId: string;
-    protected disciplinaId: string;
+    alunoId: number;
+    disciplinaId: string;
 
-    constructor(alunoId: string, disciplinaId: string) {
-        this.alunoId = alunoId;
-        this.disciplinaId = disciplinaId;
+    constructor(data: Partial<Matricula>) {
+        Object.assign(this, data);
     }
 
     getAlunoId() {

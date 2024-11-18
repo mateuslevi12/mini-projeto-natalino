@@ -4,8 +4,14 @@ meta {
   seq: 7
 }
 
-get {
-  url: http://localhost:3000/matricula/buscar-disciplinas/1
-  body: none
+put {
+  url: http://localhost:3000/matricula/remover-matricula/ricardo
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "nomeDaDisciplina": "História"
+  }
 }

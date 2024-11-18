@@ -3,8 +3,10 @@ export class Disciplina {
     protected nome: string
     protected curso: string
 
-    constructor(data: Partial<Disciplina>) {
-        Object.assign(this, data);
+    constructor(data?: Partial<Disciplina>) {
+        if (data) {
+            Object.assign(this, data);
+        }
     }
 
     getId() {

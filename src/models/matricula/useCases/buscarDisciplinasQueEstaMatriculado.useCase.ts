@@ -6,6 +6,6 @@ interface IBuscarDisciplinasProps {
     aluno: Aluno;
 }
 
-export async function buscarDisciplinasQueEstaMatriculadoUseCase(matriculaRepository: IMatriculaRepository, data: IBuscarDisciplinasProps): Promise<{ curso: string; disciplinas: string[] }[]> {
+export async function buscarDisciplinasQueEstaMatriculadoUseCase(matriculaRepository: IMatriculaRepository, data: IBuscarDisciplinasProps): Promise<{ curso: string; disciplinas: Disciplina[] }[]> {
     return matriculaRepository.buscarDisciplinasQueEstaMatriculado(data.aluno)
 }
