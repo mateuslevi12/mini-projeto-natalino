@@ -34,8 +34,7 @@ export class MatriculaRepository implements IMatriculaRepository {
         }
     }
 
-
-
+    
     async buscarDisciplinasQueEstaMatriculado(aluno: Aluno): Promise<{ curso: string; disciplinas: Disciplina[] }[]> {
         const alunoId = new Aluno(aluno).getId();
 

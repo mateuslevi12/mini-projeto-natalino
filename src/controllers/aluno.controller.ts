@@ -34,20 +34,15 @@ export class AlunoController {
     async buscarPorId(req: Request, res: Response): Promise<void> {
         try {
             const alunoIdOrNome = req.params.id;
-            
-            // Verifica se o parâmetro é um número ou uma string
+
             const aluno = isNaN(Number(alunoIdOrNome))
                 ? await buscarPorIdUseCase(this.alunoRepository, { idOuNome: alunoIdOrNome.toLowerCase() })
                 : await buscarPorIdUseCase(this.alunoRepository, { idOuNome: parseInt(alunoIdOrNome) });
-            
-            if (aluno) {
-                res.status(200).json(aluno);
-            } else {
-                res.status(404).json({ message: 'Aluno não encontrado.' });
-            }
+
+            res.status(200).json(aluno);
         } catch (error) {
             res.status(500).json({ message: 'Erro ao buscar aluno.', error });
         }
     }
-    
+
 }
