@@ -5,15 +5,12 @@ import { DisciplinaRepository } from '../models/disciplina/disciplina.repository
 
 export class DisciplinaController {
     private disciplinaRepository: DisciplinaRepository;
-    // private alunosRepository: AlunoRepository;
     private disciplinaInit: DisciplinaInitialize;
 
     constructor(
         disciplinaRepository: DisciplinaRepository,
-        //  alunosRepository: AlunoRepository,
         disciplinaInitialize: DisciplinaInitialize) {
         this.disciplinaRepository = disciplinaRepository;
-        // this.alunosRepository = alunosRepository;
         this.disciplinaInit = disciplinaInitialize;
     }
 
