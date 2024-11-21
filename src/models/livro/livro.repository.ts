@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { Aluno } from '../aluno/aluno.entity';
 import { Livro } from './livro.entity';
 import { ILivroRepository } from './livro.interface';
@@ -27,7 +28,7 @@ export class LivrosRepository implements ILivroRepository {
             if (livroEncontrado) {
 
                 if (livroEncontrado.getStatus() === "Reservado") {
-                    throw new Error("Este livro já está reservado.")
+                    throw new AxiosError("Este livro já está reservado.")
                 }
 
                 livroEncontrado.setStatus("Reservado");
@@ -39,10 +40,10 @@ export class LivrosRepository implements ILivroRepository {
                     this.livros[index] = livroEncontrado;
                 }
             } else {
-                throw new Error("Livro não encontrado para reserva.");
+                throw new AxiosError("Livro não encontrado para reserva.");
             }
         } else {
-            throw new Error("Não foi possível reservar esse livro pois o aluno não está ativo.");
+            throw new AxiosError("Não foi possível reservar esse livro pois o aluno não está ativo.");
            
         }
     }
@@ -59,17 +60,13 @@ export class LivrosRepository implements ILivroRepository {
                 this.livros[index] = livroEncontrado;
             }
         } else {
-            throw new Error("Livro não encontrado para cancelamento de reserva.");
+            throw new AxiosError("Livro não encontrado para cancelamento de reserva.");
         }
     }
 
-    async listarReservadosPeloAluno(aluno: Aluno): Promise<Livro[] | string> {
+    async listarReservadosPeloAluno(aluno: Aluno): Promise<Livro[]> {
         const reservados = this.livros.filter(livro => new Livro(livro).getReservadoPor() && new Livro(livro).getReservadoPor().getId() === aluno.getId())
         
-        if (reservados.length > 0) {
-            return reservados
-        } else {
-            return `Nenhum livro reservador por ${JSON.stringify(aluno)}`
-        }
+        return reservados
     }
 }

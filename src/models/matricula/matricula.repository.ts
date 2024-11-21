@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { Aluno } from "../aluno/aluno.entity";
 import { Disciplina } from "../disciplina/disciplina.entity";
 import { Matricula } from "./matricula.entity";
@@ -30,7 +31,7 @@ export class MatriculaRepository implements IMatriculaRepository {
             return aluno
 
         } else {
-            throw new Error("Não foi possivel matricular esse aluno em História pois ele não esta ativo")
+            throw new AxiosError("Não foi possivel matricular esse aluno em História pois ele não esta ativo")
         }
     }
 
@@ -64,19 +65,27 @@ export class MatriculaRepository implements IMatriculaRepository {
     }
 
     async removerDisciplinaDaMatricula(aluno: Aluno, nomeDaDisciplina: string): Promise<void> {
-        const index = this.matriculas.findIndex(matricula => matricula.alunoId == aluno.getId() && matricula.disciplinaId == nomeDaDisciplina)
-
-        if (index !== -1) {
-            this.matriculas.splice(index, 1);
-            const alunoComMatricula = this.alunos[index];
-
-            const alunoInstancia = new Aluno(alunoComMatricula);
-            alunoInstancia.setCurso(null);
-
-            this.alunos[index] = alunoInstancia;
+        const indexMatricula = this.matriculas.findIndex(
+            matricula => matricula.alunoId == new Aluno(aluno).getId() && matricula.disciplinaId == "História"
+        );
+    
+        if (indexMatricula !== -1) {
+            this.matriculas.splice(indexMatricula, 1);
+    
+            const alunoIndex = this.alunos.findIndex(a => new Aluno(a).getId() === aluno.getId());
+    
+            if (alunoIndex !== -1) {
+                const alunoInstancia = new Aluno(this.alunos[alunoIndex]);
+                alunoInstancia.setCurso(null);
+                this.alunos[alunoIndex] = alunoInstancia;
+            } else {
+                console.error("Aluno não encontrado no array `alunos`.");
+            }
+            
         } else {
-            throw new Error("Aluno não possui matrícula na disciplina informada.");
+            throw new AxiosError("Aluno não possui matrícula na disciplina informada.");
         }
     }
+    
 
 }

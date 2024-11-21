@@ -50,6 +50,8 @@ export class MatriculaController {
                 ? await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId?.toLowerCase() })
                 : await buscarPorIdUseCase(this.alunosRepository, { idOuNome: parseInt(alunoId) });
 
+                console.log(aluno)
+
             await removerDisciplinaDaMatriculaUseCase(this.matriculaRepository, {
                 aluno,
                 nomeDaDisciplina

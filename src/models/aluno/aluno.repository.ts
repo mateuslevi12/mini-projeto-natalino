@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { Aluno } from "./aluno.entity";
 import { IAlunoRepository } from "./aluno.interface";
 
@@ -30,7 +31,7 @@ export class AlunoRepository implements IAlunoRepository {
         if (aluno) {
             return new Aluno(aluno)
         } else {
-            throw new Error('Aluno não encontrado')
+            throw new AxiosError('Aluno não encontrado')
         }
     }
 }
