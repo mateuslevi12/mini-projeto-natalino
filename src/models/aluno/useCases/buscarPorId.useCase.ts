@@ -6,5 +6,16 @@ interface IBuscarPorIdProps {
 }
 
 export async function buscarPorIdUseCase(alunosRepository: IAlunoRepository, data: IBuscarPorIdProps): Promise<Aluno> {
-    return await alunosRepository.buscarPorId(data.idOuNome);
+    const idOuNomeFormatado =
+        typeof data.idOuNome === "string" && isNaN(Number(data.idOuNome))
+            ? data.idOuNome.toLowerCase()
+            : parseInt(data.idOuNome as string);
+
+    const aluno = await alunosRepository.buscarPorId(idOuNomeFormatado);
+
+    if (!aluno) {
+        throw new Error("Aluno não encontrado");
+    }
+
+    return aluno;
 }

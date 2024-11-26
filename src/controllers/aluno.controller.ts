@@ -35,9 +35,7 @@ export class AlunoController {
         try {
             const alunoIdOrNome = req.params.id;
 
-            const aluno = isNaN(Number(alunoIdOrNome))
-                ? await buscarPorIdUseCase(this.alunoRepository, { idOuNome: alunoIdOrNome.toLowerCase() })
-                : await buscarPorIdUseCase(this.alunoRepository, { idOuNome: parseInt(alunoIdOrNome) });
+            const aluno = await buscarPorIdUseCase(this.alunoRepository, { idOuNome: alunoIdOrNome })
 
             res.status(200).json(aluno);
         } catch (error) {

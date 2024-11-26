@@ -15,9 +15,7 @@ export class MatriculaController {
 
     async matricularEmHistoria(req: Request, res: Response) {
         const { alunoId } = req.params;
-        const aluno = isNaN(Number(alunoId))
-            ? await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId?.toLowerCase() })
-            : await buscarPorIdUseCase(this.alunosRepository, { idOuNome: parseInt(alunoId) });
+        const aluno = await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId })
 
         const response = await this.matriculaRepository.matriculaEmHistoria(aluno);
         res.status(200).json(response);
@@ -26,9 +24,9 @@ export class MatriculaController {
     async listarDisciplinasMatriculadas(req: Request, res: Response) {
         try {
             const { alunoId } = req.params;
-            const aluno = isNaN(Number(alunoId))
-                ? await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId?.toLowerCase() })
-                : await buscarPorIdUseCase(this.alunosRepository, { idOuNome: parseInt(alunoId) });
+
+            const aluno = await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId })
+
             const disciplinas = await this.matriculaRepository.buscarDisciplinasQueEstaMatriculado(aluno);
             res.status(200).json(disciplinas);
         } catch (error) {
@@ -46,11 +44,8 @@ export class MatriculaController {
         try {
             const { alunoId } = req.params;
             const { nomeDaDisciplina } = req.body;
-            const aluno = isNaN(Number(alunoId))
-                ? await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId?.toLowerCase() })
-                : await buscarPorIdUseCase(this.alunosRepository, { idOuNome: parseInt(alunoId) });
 
-                console.log(aluno)
+            const aluno = await buscarPorIdUseCase(this.alunosRepository, { idOuNome: alunoId })
 
             await removerDisciplinaDaMatriculaUseCase(this.matriculaRepository, {
                 aluno,
